@@ -2,7 +2,6 @@ import time
 import re
 import argparse
 
-from email import message
 from lib2to3.pgen2 import driver
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -224,7 +223,7 @@ if __name__ == '__main__':
         if args['contact']:
             send_crookContact(args['contact'], args['message'], args['messages_number'])
         else:
-            print("The arguments messages_number and contact are require for type 2")      
+            print("The argument contact is require for type 2")      
     else:
         print("Type selected doesn't exist, please select one: \n1 - Send messages to many contacts based on spam message;\n2 - Send messages to crash the one crook contact by phone number or contact name")
 
