@@ -1,2 +1,3 @@
 data/*
 geckodriver.log
+.gitignore
