@@ -23,6 +23,7 @@ Nesse projeto foi utilizado Python com Selenium e NLTK.
     ```
     $ pip install selenium nltk
     ```
+- Baixe o ChromeDriver para um diretório de sua prefrência e modifique a linha 24 do arquivo *manager_whats.py* para direcionar ao local do drive. Link para download: https://chromedriver.chromium.org/downloads
 - Escolha o processo a ser executado:
     1. Enviar mensagens para vítimas:
         - Modifique a variável *msg_fraud* no arquivo *manager_whats.py* linha 28 para conter a mensagem de spam que você tenha recebido. Essa mensagem é importante pois é através dela que o algoritmo verifica se a última mensagem de uma conversa do whatsapp é a mensagem de fraude.
