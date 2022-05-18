@@ -1,3 +1,7 @@
+import time
+import re
+import argparse
+
 from email import message
 from lib2to3.pgen2 import driver
 from selenium import webdriver
@@ -6,9 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
-import time
-import re
-import argparse
 from nltk.corpus import stopwords
 
 stopwords_list = stopwords.words('portuguese')
