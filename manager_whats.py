@@ -1,6 +1,7 @@
 import time
 import re
 import argparse
+import os
 
 from lib2to3.pgen2 import driver
 from selenium import webdriver
@@ -11,6 +12,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from nltk.corpus import stopwords
 
+
 stopwords_list = stopwords.words('portuguese')
 driver = None
 
@@ -19,8 +21,12 @@ def setup_driver():
     """Configure the navigation driver to process
     """
     global driver
+    data_path = "./data"
+
+    if not os.path.isdir(data_path):
+        os.mkdir(data_path)
     options = webdriver.ChromeOptions()
-    options.add_argument(r"user-data-dir=./data") # path to storage whatsapp session
+    options.add_argument(r"user-data-dir="+data_path) # path to storage whatsapp session
     driver = webdriver.Chrome(executable_path='/usr/local/chromedriver/chromedriver', options=options) # path to chromedriver
     driver.get('https://web.whatsapp.com/')
 
@@ -164,16 +170,21 @@ def send_manyContacts(txt_message):
         if scroll_step > 0:
             driver.execute_script("document.getElementById('pane-side').scrollTo(0, "+str(scroll_step)+");")
         
-        # get elements of each chat on pane-side
+        # get elements of each chat on pane-side and a list with chats names
         chat_list = driver.find_elements(By.CLASS_NAME, 'zoWT4')
-    
-        scroll_step += 660
-        chat_current = []
+        chat_current = [chat.get_attribute("textContent") for chat in chat_list]
+
+        # finish if has no new chat clicked and the contact's lists old and current are equals
+        if sorted(chat_current) == sorted(chat_old) and not is_newChat:
+            print('Process finished!')
+            break
+
+        is_newChat = False
 
         for chat in chat_list: 
+        
             # get text of chat (number or contact name)
             title = chat.get_attribute("textContent")
-            chat_current.append(title)
             
             if is_noContact(title) and not title in chat_list_processed:
                 # click on the chat, wait load last message and get message text
@@ -193,17 +204,15 @@ def send_manyContacts(txt_message):
                     for message in arr_message:
                         textbox.send_keys(message)
                         textbox.send_keys(Keys.ENTER)
-                        time.sleep(1)
-                else:
-                    chat_list_processed.append(title)
-            
-            # due the click on conversation is necessary come back to scroll position
-            driver.execute_script("document.getElementById('pane-side').scrollTo(0, "+str(scroll_step)+");")
+                        time.sleep(1.0)
+                # finish this intaration because is necessary load the elements again after click on conversation
+                is_newChat = True
+                chat_list_processed.append(title)
+                break
+        # change the scroll only if there isn't another chat clicked
+        if not is_newChat:
+            scroll_step += 660
 
-        # finish if has no new chat
-        if sorted(chat_current) == sorted(chat_old):
-            print('Process finished!')
-            break
         chat_old = chat_current
 
 if __name__ == '__main__':
@@ -217,7 +226,13 @@ if __name__ == '__main__':
     args = vars(argp.parse_args())
 
     if args['type'] == 1:
-        send_manyContacts(args['message'])
+        msg = args['message']
+        if not msg:
+            msg = "Olá,\nNa sexta-feira passada você me enviou mensagens de spam oferecendo emprego com um link para o contato de fraude. \
+                    Seu whatsApp provavelmente foi clonado por algum golpista que utilizou para enviar essas mensagens, acredito que não apenas para mim. \
+                    \nQueria te recomendar que proteja sua conta de whatsApp ativando a verificação em dois fatores, dessa forma eles não podem mais acessar \
+                    o seu número. Vou enviar um tutorial de como fazer isso:\n https://www.youtube.com/watch?v=SpCONE_gYKE\n Tenha uma boa noite e se cuide!"
+        send_manyContacts(msg)
     elif args['type'] == 2:
         print('\n',50 * '*', '\n* Please use this option just for crook contacts *\n', 50 * '*', '\n', sep='')
         if args['contact']:
