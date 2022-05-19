@@ -205,7 +205,7 @@ def send_manyContacts(txt_message):
                         textbox.send_keys(message)
                         textbox.send_keys(Keys.ENTER)
                         time.sleep(1.0)
-                # finish this intaration because is necessary load the elements again after click on conversation
+                # finish this iteration because is necessary load the elements again after click on conversation
                 is_newChat = True
                 chat_list_processed.append(title)
                 break
