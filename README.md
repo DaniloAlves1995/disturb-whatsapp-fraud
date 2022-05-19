@@ -44,4 +44,3 @@ Nesse projeto foi utilizado Python com Selenium e NLTK.
         $ python3 manager_whats.py --type 2 --contact "Golpista" --messages_number 5
         ```
         O parâmetro `contact` é obrigatório para esse processo e pode ser o nome do contato golpista (caso você tenha salvo) ou o número (+55 99 9999-9999). O parâmetro `messages_number` é referente a quantidade de vezes que você deseja repetir o processo (geralmente o golpista não suporta que você atrapalhe ele por muito tempo, ele bloqueia você XD).
-
